@@ -2,4 +2,5 @@ Flask==0.10.1
 apiai ==1.2.3
 gunicorn ==19.7.1
 pandas == 0.20.3
-pandas_datareader ==0.5.0
+pandas_datareader==0.5.0
+numpy==1.13.3
