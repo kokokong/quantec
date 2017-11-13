@@ -9,7 +9,7 @@ except ImportError:
     )
     import apiai
 
-CLIENT_ACCESS_TOKEN = '1885ee7d899e40b6b3ab98bee443a2cb'
+CLIENT_ACCESS_TOKEN = 'f6e72afa001444d18c4fceeb9061b7f7'
 
 def get_apiai(ai, message):
     request = ai.text_request()
