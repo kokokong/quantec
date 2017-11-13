@@ -42,6 +42,14 @@ def Keyboard():
 
     return jsonify(datasend)
     
+@app.route('/message', methods=['POST'])    
+def message():
+    dataReceive = request.get_json()
+    content = dataReceive['content']
+    answer = connect_apiai.get_apiai(ai,content)
+    print(answer)
+    return jsonify({"message":{"text":answer}})
+
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
