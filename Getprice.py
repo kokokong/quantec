@@ -5,6 +5,16 @@ import numpy
 import json
 import requests
 
+def get_stockcode(product):
+    tmp = pd.read_csv("stock_code.csv",dtype=str,encoding='utf-8')
+    idx = 0
+    for i in range(len(tmp)):
+        if(product == tmp['회사명'][i]):
+            idx = i
+            break
+    code = tmp['종목코드'][i]
+    code = 'KRX:'+str(code)
+    return code
 
 def get_realtime(code):
     print(code)

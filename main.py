@@ -5,13 +5,13 @@ import json
 import os
 import pickle
 import connect_apiai
-
+import Getprice
 
 from flask import jsonify
 from flask import Flask
 from flask import request
 from flask import make_response
-from Getprice import get_realtime
+
 
 import os.path
 import sys
@@ -70,7 +70,8 @@ def makeWebhookresult(req):
         if  parameters.get('stocks')!="":
             product = str(parameters.get("stocks"))
             print(product)
-            RTP = get_realtime(product)
+            code = Getprice.get_stockcode(product)
+            RTP = Getprice.get_realtime(code)
 
        
         speech = str(product)+"의 현재 가격은 "+str(RTP)+"원 입니다."
