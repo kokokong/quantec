@@ -20,5 +20,6 @@ def get_apiai(ai, message):
     responsestr = response.read().decode('utf-8')
     response_obj = json.loads(responsestr)
     answer = response_obj["result"]["fulfillment"]["speech"]
+    print(answer)
     
     return answer
