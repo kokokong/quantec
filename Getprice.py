@@ -6,6 +6,7 @@ import requests
 
 
 def get_realtime(code):
+    code = code.zfill(6)
     rsp = requests.get('https://finance.google.com/finance?q='+code+'&output=json')
     print(rsp)
     if rsp.status_code in (200,):
