@@ -66,6 +66,7 @@ def makeWebhookresult(req):
         print(parameters.get('stcoks')!="")
         if  parameters.get('stocks')!="":
             product = str(parameters.get("stocks"))
+            print(product)
             RTP = Getprice.get_realtime(product)
 
        

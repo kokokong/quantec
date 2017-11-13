@@ -10,7 +10,6 @@ def get_realtime(code):
     code = code.zfill(6)
     rsp = requests.get('https://finance.google.com/finance?q='+code+'&output=json')
     print(rsp)
-    print(rsp)
     if rsp.status_code in (200,):
         fin_data = json.loads(rsp.content[6:-2].decode('unicode_escape'))
         rt_price = fin_data['l']
