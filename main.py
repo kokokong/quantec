@@ -6,6 +6,9 @@ import os
 import pickle
 import connect_apiai
 import Getprice
+import PredP
+import util
+import Terms
 
 from flask import jsonify
 from flask import Flask
@@ -51,7 +54,12 @@ def message():
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
+    
     req = request.get_json(silent=True, force=True)
+    print("ip: ")
+    print(request.headers.get('User-Agent'))
+    print(req)
+    print(request.remote_addr)
     res = makeWebhookresult(req)
 
     res = json.dumps(res, indent=4)
@@ -66,7 +74,6 @@ def makeWebhookresult(req):
 
         result = req.get("result")
         parameters = result.get("parameters")
-        print(parameters.get('stcoks')!="")
         if  parameters.get('stocks')!="":
             product = str(parameters.get("stocks"))
             print(product)
@@ -84,7 +91,65 @@ def makeWebhookresult(req):
             "displayText": speech,
             #"data": {},
             # "contextOut": [],
-            "source": "apiai-onlinestore-shipping"
+            "source": "quantec"
+        }
+    elif req.get("result").get("action") == "future" :
+
+        result = req.get("result")
+        parameters = result.get("parameters")
+        print(parameters.get('stcoks')!="")
+        if  parameters.get('stocks')!="":
+            product = str(parameters.get("stocks"))
+            print(product)
+            FP = PredP.get_future(product)
+        if FP != " ":
+            speech = str(product)+"의 다음 거래일 가격은 "+str(FP)+"원 입니다."
+        else:
+            speech = "해당 종목의 가격 예상 시스템은 추후에 구현됩니다."
+        print("Response:")
+        print(speech)
+    
+        return {
+            "speech": speech,
+            "displayText": speech,
+            #"data": {},
+            # "contextOut": [],
+            "source": "quantec"
+        }
+    
+    elif req.get("result").get("action") == "terms" :   
+        
+        result = req.get("result")
+        parameters = result.get("parameters")
+
+        if  parameters.get('terms')!="":
+            terms = str(parameters.get("terms"))
+            print(terms)
+            explain = Terms.get_explain(terms)
+
+       
+        speech = str(terms)+"의 뜻은 다음과 같습니다. "+explain+"\n"
+
+        print("Response:")
+        print(speech)
+    
+        return {
+            "speech": speech,
+            "displayText": speech,
+            #"data": {},
+            # "contextOut": [],
+            "source": "quantec"
+        }
+    elif req.get("result").get("action") == "Time":
+        time = util.get_time()
+        speech = "현재 시간은 "+ time
+        
+        return {
+            "speech": speech,
+            "displayText": speech,
+            #"data": {},
+            # "contextOut": [],
+            "source": "quantec"
         }
         
         

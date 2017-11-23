@@ -12,7 +12,7 @@ def get_stockcode(product):
         if(product == tmp['회사명'][i]):
             idx = i
             break
-    code = tmp['종목코드'][i]
+    code = tmp['종목코드'][idx]
     code = 'KRX:'+str(code)
     return code
 
