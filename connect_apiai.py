@@ -29,23 +29,6 @@ def get_apiai(ai, message):
                 print(i)
                 dataSend = get_pattern.update_keyboard(i)
                 return dataSend
-            """    
-            print(parameter)
-            print(type(parameter))
-            a= parameter.keys()
-            print(type(a))
-            b = list(parameter)
-            print(b)
-            for i in range(1,11):
-                a = "Step"+str(i)
-                print(a)
-                if parameter.get(a) == "":
-                    print(i)
-                    dataSend = get_pattern.update_keyboard(i)
-                    print(dataSend)
-                    return dataSend
-            """
+
     answer = response_obj["result"]["fulfillment"]["speech"]
-    print("answer")
-    print(answer)
     return answer
