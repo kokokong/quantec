@@ -9,7 +9,9 @@ import Getprice
 import PredP
 import util
 import Terms
+import numpy as np
 
+import get_pattern
 from flask import jsonify
 from flask import Flask
 from flask import request
@@ -28,7 +30,8 @@ except ImportError:
     import apiai
 CLIENT_ACCESS_TOKEN = 'f6e72afa001444d18c4fceeb9061b7f7'
 ai = apiai.ApiAI(CLIENT_ACCESS_TOKEN)
-
+KEY =  get_pattern.KeyBoard
+count = 0
 # Flask app should start in global layout
 app = Flask(__name__)
 
@@ -38,30 +41,71 @@ def index():
 
 @app.route('/keyboard')
 def Keyboard():
-    datasend = {
-        "type":"text"
-    }
-
-    return jsonify(datasend)
     
+    dataSend = {
+        "type" : "buttons",
+        "buttons" : KEY.buttons
+    }
+    print(dataSend)
+    return jsonify(dataSend)
+
+
+@app.route('/message', methods=['POST'])
+def Message():
+    dataReceive = request.get_json()
+    content = dataReceive['content']
+    print(dataReceive)
+    if content == u"현재 주가 확인":
+        answer = connect_apiai.get_apiai(ai,content)
+        return jsonify({"message":{"text":answer}})
+
+    elif content == u"내일 예측 주가 확인":
+        answer = connect_apiai.get_apiai(ai,content)
+        print(answer)
+        return jsonify({"message":{"text":answer}})
+        
+
+    elif u"처음으로" in content:
+        dataSend ={ 
+           "message": {
+                "text": "처음으로 돌아갑니다."
+            },
+            "keyboard":{
+                "type" : "buttons",
+                "buttons" : ['현재 주가 확인','내일 예측 주가 확인','투자자 성향분석', '도움말']
+            }
+        }
+        print(type(dataSend))
+        print(type(dataSend)==dict)
+        return jsonify(dataSend)
+    else:
+        answer = connect_apiai.get_apiai(ai,content)
+        print(type(answer))
+        print(answer)
+        if type(answer) == dict:
+            return jsonify(answer)
+        else:    
+            print(type(answer))
+            print(answer)
+            return jsonify({"message":{"text":answer}})
+
+ 
+
+"""
 @app.route('/message', methods=['POST'])    
 def message():
+    
     dataReceive = request.get_json()
     content = dataReceive['content']
     answer = connect_apiai.get_apiai(ai,content)
     print(answer)
     return jsonify({"message":{"text":answer}})
-
+"""
 @app.route('/webhook', methods=['POST'])
 def webhook():
     
     req = request.get_json(silent=True, force=True)
-    print("ip: ")
-    print(request.headers.get('User-Agent'))
-    print(req)
-    print(request.remote_addr)
     res = makeWebhookresult(req)
-
     res = json.dumps(res, indent=4)
 
     r = make_response(res)
@@ -140,6 +184,7 @@ def makeWebhookresult(req):
             # "contextOut": [],
             "source": "quantec"
         }
+        
     elif req.get("result").get("action") == "Time":
         time = util.get_time()
         speech = "현재 시간은 "+ time
@@ -151,8 +196,86 @@ def makeWebhookresult(req):
             # "contextOut": [],
             "source": "quantec"
         }
+    elif req.get("result").get("action") == "survey":
+        result = req.get("result")
+        parameters = result.get("parameters")
+        print(parameters)
         
         
+        return {
+            "speech": speech,
+            "displayText": speech,
+            #"data": {},
+            # "contextOut": [],
+            "source": "quantec"
+        }
+    elif req.get("result").get("action") == "score":
+        result = req.get("result")
+        contexts = result.get("contexts")[0]
+        print(contexts)
+        parameters = contexts.get("parameters")
+        print(parameters)
+        score = 0
+        for i in range(1,11):
+            col = parameters.get("Step"+str(i))
+            col = int(col)
+            score += get_pattern.get_score(i,col)
+            print(i)
+        print(score)
+        score = score/47*100
+        print(score)
+        print(type(score)
+        )
+        if score>= 70:
+            speech = "고객님의 투자 성향 점수는 "+str(score)+"점으로 공격투자형 입니다."
+            print(speech)
+            return {
+                "speech": speech,
+                "displayText": speech,
+                #"data": {},
+                # "contextOut": [],
+                "source": "quantec"
+            }
+        elif score>=60:
+            speech = "고객님의 투자 성향 점수는 "+str(score)+"점으로 적극투자형 입니다."
+            print(speech)
+            return {
+                "speech": speech,
+                "displayText": speech,
+                #"data": {},
+                # "contextOut": [],
+                "source": "quantec"
+            }
+        elif score>=50:
+            speech = "고객님의 투자 성향 점수는 "+str(score)+"점으로 위험중립형 입니다."
+            print(speech)
+            return {
+                "speech": speech,
+                "displayText": speech,
+                #"data": {},
+                # "contextOut": [],
+                "source": "quantec"
+            }
+        elif score>= 40:
+            speech = "고객님의 투자 성향 점수는 "+str(score)+"점으로 안정추구형 입니다."
+            print(speech)
+            return {
+                "speech": speech,
+                "displayText": speech,
+                #"data": {},
+                # "contextOut": [],
+                "source": "quantec"
+            }
+        else:
+            speech = "고객님의 투자 성향 점수는 "+str(score)+"점으로 안정형 입니다."
+            return {
+                "speech": speech,
+                "displayText": speech,
+                #"data": {},
+                # "contextOut": [],
+                "source": "quantec"
+            }
+
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
 
