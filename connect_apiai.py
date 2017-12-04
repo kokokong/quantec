@@ -16,11 +16,9 @@ def get_apiai(ai, message):
     request = ai.text_request()
     request.lang = 'ko'
     request.query = message
-    print(message)
     response = request.getresponse()
     responsestr = response.read().decode('utf-8')
     response_obj = json.loads(responsestr)
-    print(response_obj)
     name = response_obj['result']['metadata']['intentName'][:7]
     parameter = response_obj.get('result').get('parameters')
     for i in range(1,11):
@@ -44,5 +42,6 @@ def get_apiai(ai, message):
                 return dataSend
         """
     answer = response_obj["result"]["fulfillment"]["speech"]
+    print("answer")
     print(answer)
     return answer

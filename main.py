@@ -85,11 +85,14 @@ def Message():
         print(type(answer))
         print(answer)
         if type(answer) == dict:
+            print("@")
             return jsonify(answer)
-        else:    
-            print(type(answer))
-            print(answer)
-            return jsonify({"message":{"text":answer}})
+         
+        print(type(answer))
+        print("!")
+        print(answer)
+        return jsonify(answer)
+        #return jsonify({"message":{"text":answer}})
 
  
 
@@ -105,7 +108,6 @@ def message():
 """
 @app.route('/webhook', methods=['POST'])
 def webhook():
-    
     req = request.get_json(silent=True, force=True)
     res = makeWebhookresult(req)
     print(res)
@@ -113,7 +115,7 @@ def webhook():
 
     r = make_response(res)
     r.headers['Content-Type'] = 'application/json'
-    
+    print(r)
     return r
 
 def makeWebhookresult(req):
@@ -215,9 +217,7 @@ def makeWebhookresult(req):
     elif req.get("result").get("action") == "score":
         result = req.get("result")
         contexts = result.get("contexts")[0]
-        print(contexts)
         parameters = contexts.get("parameters")
-        print(parameters)
         score = 0
         frame = [[0,0,0,0,0],
          [4,4,3,2,1],
