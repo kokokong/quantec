@@ -3,7 +3,6 @@ from flask import jsonify
 from flask import Flask
 from flask import request
 from flask import make_response
-import numpy as np
 
         
 class KeyBoard:
@@ -158,9 +157,20 @@ def update_keyboard(i):
                 }
     return dataSend
     
-    
+
+frame = [[0,0,0,0,0],
+         [4,4,3,2,1],
+         [1,2,3,4,5],
+         [-1,2,3,5,5],
+         [1,2,3,4],
+         [5,4,3,2,1],
+         [3,2,1],
+         [5,4,3,2,1],
+         [-2,2,4,6],
+         [2,3,4,5],
+         [5,4,-2,-2],
+        ]
 def get_score(i,j):
     if(i<=10):
-        frame = np.genfromtxt("score.csv",delimiter=',',dtype='int')
         score = frame[i][j]
         return score

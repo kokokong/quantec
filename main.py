@@ -218,7 +218,7 @@ def makeWebhookresult(req):
         score = 0
         for i in range(1,11):
             col = parameters.get("Step"+str(i))
-            col = int(col)
+            col = int(col)-1
             score += get_pattern.get_score(i,col)
         score = score/47*100
         
