@@ -32,6 +32,8 @@ CLIENT_ACCESS_TOKEN = 'f6e72afa001444d18c4fceeb9061b7f7'
 ai = apiai.ApiAI(CLIENT_ACCESS_TOKEN)
 KEY =  get_pattern.KeyBoard
 count = 0
+
+
 # Flask app should start in global layout
 app = Flask(__name__)
 
@@ -217,12 +219,25 @@ def makeWebhookresult(req):
         parameters = contexts.get("parameters")
         print(parameters)
         score = 0
+        frame = [[0,0,0,0,0],
+         [4,4,3,2,1],
+         [1,2,3,4,5],
+         [-1,2,3,5,5],
+         [1,2,3,4],
+         [5,4,3,2,1],
+         [3,2,1],
+         [5,4,3,2,1],
+         [-2,2,4,6],
+         [2,3,4,5],
+         [5,4,-2,-2],
+        ]
         for i in range(1,11):
             col = parameters.get("Step"+str(i))
             col = int(col)-1
-            score += get_pattern.get_score(i,col)
-        score = score/47*100
-        
+            tmp = frame[i][col]
+            score += tmp
+        score = int(score/47*100)
+
         if score>= 70:
             speech = "고객님의 투자 성향 점수는 "+str(score)+"점으로 공격투자형 입니다."
             print(speech)
