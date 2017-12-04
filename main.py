@@ -91,8 +91,8 @@ def Message():
         print(type(answer))
         print("!")
         print(answer)
-        return jsonify(answer)
-        #return jsonify({"message":{"text":answer}})
+        #return jsonify(answer)
+        return jsonify({"message":{"text":answer}})
 
  
 

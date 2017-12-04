@@ -21,26 +21,30 @@ def get_apiai(ai, message):
     response_obj = json.loads(responsestr)
     name = response_obj['result']['metadata']['intentName'][:7]
     parameter = response_obj.get('result').get('parameters')
-    for i in range(1,11):
-        if parameter.get("Step"+str(i)) =="":
-            dataSend = get_pattern.update_keyboard(i)
-            return dataSend
-        """    
-        print(parameter)
-        print(type(parameter))
-        a= parameter.keys()
-        print(type(a))
-        b = list(parameter)
-        print(b)
+    print(name)
+    print(len(name))
+    if len(name) == 7:
         for i in range(1,11):
-            a = "Step"+str(i)
-            print(a)
-            if parameter.get(a) == "":
+            if parameter.get("Step"+str(i)) =="":
                 print(i)
                 dataSend = get_pattern.update_keyboard(i)
-                print(dataSend)
                 return dataSend
-        """
+            """    
+            print(parameter)
+            print(type(parameter))
+            a= parameter.keys()
+            print(type(a))
+            b = list(parameter)
+            print(b)
+            for i in range(1,11):
+                a = "Step"+str(i)
+                print(a)
+                if parameter.get(a) == "":
+                    print(i)
+                    dataSend = get_pattern.update_keyboard(i)
+                    print(dataSend)
+                    return dataSend
+            """
     answer = response_obj["result"]["fulfillment"]["speech"]
     print("answer")
     print(answer)
