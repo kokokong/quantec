@@ -106,6 +106,7 @@ def webhook():
     
     req = request.get_json(silent=True, force=True)
     res = makeWebhookresult(req)
+    print(res)
     res = json.dumps(res, indent=4)
 
     r = make_response(res)
