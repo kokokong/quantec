@@ -163,5 +163,4 @@ def get_score(i,j):
     if(i<=10):
         frame = np.genfromtxt("score.csv",delimiter=',',dtype='int')
         score = frame[i][j]
-        print(score)
         return score

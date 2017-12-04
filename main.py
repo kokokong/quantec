@@ -220,12 +220,8 @@ def makeWebhookresult(req):
             col = parameters.get("Step"+str(i))
             col = int(col)
             score += get_pattern.get_score(i,col)
-            print(i)
-        print(score)
         score = score/47*100
-        print(score)
-        print(type(score)
-        )
+        
         if score>= 70:
             speech = "고객님의 투자 성향 점수는 "+str(score)+"점으로 공격투자형 입니다."
             print(speech)
