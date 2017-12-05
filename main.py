@@ -48,7 +48,6 @@ def Keyboard():
         "type" : "buttons",
         "buttons" : KEY.buttons
     }
-    print(dataSend)
     return jsonify(dataSend)
 
 
@@ -82,16 +81,10 @@ def Message():
         return jsonify(dataSend)
     else:
         answer = connect_apiai.get_apiai(ai,content)
-        print(type(answer))
-        print(answer)
         if type(answer) == dict:
             print("@")
             return jsonify(answer)
-         
-        print(type(answer))
-        print("!")
-        print(answer)
-        #return jsonify(answer)
+        
         return jsonify({"message":{"text":answer}})
 
  
@@ -110,12 +103,9 @@ def message():
 def webhook():
     req = request.get_json(silent=True, force=True)
     res = makeWebhookresult(req)
-    print(res)
     res = json.dumps(res, indent=4)
-
     r = make_response(res)
     r.headers['Content-Type'] = 'application/json'
-    print(r)
     return r
 
 def makeWebhookresult(req):
@@ -123,9 +113,10 @@ def makeWebhookresult(req):
 
         result = req.get("result")
         parameters = result.get("parameters")
-        if  parameters.get('stocks')!="":
+        if parameters.get('stocks')=="":
+            return "확인하고 싶은 주식 종목을 입력해 주세요"
+        elif  parameters.get('stocks')!="":
             product = str(parameters.get("stocks"))
-            print(product)
             code = Getprice.get_stockcode(product)
             RTP = Getprice.get_realtime(code)
 
@@ -135,23 +126,18 @@ def makeWebhookresult(req):
         print("Response:")
         print(speech)
     
-        return {
-            "speech": speech,
-            "displayText": speech,
-            #"data": {},
-            # "contextOut": [],
-            "source": "quantec"
-        }
-    elif req.get("result").get("action") == "future" :
+        return speech
+        
+    elif req.get("result").get("action") == "futures" :
 
         result = req.get("result")
         parameters = result.get("parameters")
-        print(parameters.get('stcoks')!="")
-        if  parameters.get('stocks')!="":
+        if parameters.get('stocks')=="":
+            return "확인하고 싶은 주식 종목을 입력해 주세요"
+        elif  parameters.get('stocks')!="":
             product = str(parameters.get("stocks"))
-            print(product)
             FP = PredP.get_future(product)
-        if FP != " ":
+        if FP != "":
             speech = str(product)+"의 다음 거래일 가격은 "+str(FP)+"원 입니다."
         else:
             speech = "해당 종목의 가격 예상 시스템은 추후에 구현됩니다."
@@ -173,7 +159,6 @@ def makeWebhookresult(req):
 
         if  parameters.get('terms')!="":
             terms = str(parameters.get("terms"))
-            print(terms)
             explain = Terms.get_explain(terms)
 
        
@@ -201,6 +186,7 @@ def makeWebhookresult(req):
             # "contextOut": [],
             "source": "quantec"
         }
+        
     elif req.get("result").get("action") == "survey":
         result = req.get("result")
         parameters = result.get("parameters")

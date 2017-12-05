@@ -170,6 +170,7 @@ frame = [[0,0,0,0,0],
          [2,3,4,5],
          [5,4,-2,-2],
         ]
+        
 def get_score(i,j):
     if(i<=10):
         score = frame[i][j]
