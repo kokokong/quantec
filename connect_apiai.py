@@ -5,7 +5,6 @@ import json
 import get_pattern
 import Getprice
 import PredP
-import util
 import Terms
 
 try:
@@ -113,17 +112,18 @@ def get_apiai(ai, message):
     elif action == "terms":
         result = response_obj.get("result")
         parameters = result.get("parameters")
-
-        if  parameters.get('terms')!="":
+        print(response_obj)
+        if parameters.get("terms") =="":
+            return "알고 싶은 금융 용어를 검색해 보세요"
+        elif  parameters.get('terms')!="":
             terms = str(parameters.get("terms"))
             explain = Terms.get_explain(terms)
 
        
-        speech = str(terms)+"의 뜻은 다음과 같습니다. "+explain+"\n"
+        speech = str(terms)+"의 뜻은 다음과 같습니다. "+explain
 
         print("Response:")
         print(speech)
         return speech
-    
     answer = response_obj["result"]["fulfillment"]["speech"]
     return answer

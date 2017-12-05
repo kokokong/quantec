@@ -7,7 +7,6 @@ import pickle
 import connect_apiai
 import Getprice
 import PredP
-import util
 import Terms
 import numpy as np
 
@@ -73,7 +72,7 @@ def Message():
             },
             "keyboard":{
                 "type" : "buttons",
-                "buttons" : ['현재 주가 확인','내일 예측 주가 확인','투자자 성향분석', '도움말']
+                "buttons" : KEY.buttons
             }
         }
         print(type(dataSend))
@@ -99,6 +98,7 @@ def message():
     print(answer)
     return jsonify({"message":{"text":answer}})
 """
+
 @app.route('/webhook', methods=['POST'])
 def webhook():
     req = request.get_json(silent=True, force=True)
@@ -167,18 +167,6 @@ def makeWebhookresult(req):
         print("Response:")
         print(speech)
     
-        return {
-            "speech": speech,
-            "displayText": speech,
-            #"data": {},
-            # "contextOut": [],
-            "source": "quantec"
-        }
-        
-    elif req.get("result").get("action") == "Time":
-        time = util.get_time()
-        speech = "현재 시간은 "+ time
-        
         return {
             "speech": speech,
             "displayText": speech,
