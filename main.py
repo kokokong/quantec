@@ -63,8 +63,19 @@ def Message():
         answer = connect_apiai.get_apiai(ai,content)
         print(answer)
         return jsonify({"message":{"text":answer}})
-        
-
+    
+    elif u"금융 상품 추천" in content:
+        dataSend ={ 
+           "message": {
+                "text": "고객님의 투자 성향을 선택해 주세요."
+            },
+            "keyboard":{
+                "type" : "buttons",
+                "buttons" : KEY.tendency
+            }
+        }
+        return jsonify(dataSend)
+    
     elif u"처음으로" in content:
         dataSend ={ 
            "message": {
@@ -75,8 +86,6 @@ def Message():
                 "buttons" : KEY.buttons
             }
         }
-        print(type(dataSend))
-        print(type(dataSend)==dict)
         return jsonify(dataSend)
     else:
         answer = connect_apiai.get_apiai(ai,content)

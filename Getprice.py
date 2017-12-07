@@ -24,6 +24,7 @@ def get_realtime(code):
     if rsp.status_code in (200,):
         fin_data = json.loads(rsp.content[6:-2].decode('unicode_escape'))
         rt_price = fin_data['l']
-
+    rt_price = rt_price.replace(",","")
+    rt_price = int(float(rt_price))
     return rt_price
     

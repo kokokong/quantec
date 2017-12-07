@@ -6,6 +6,7 @@ import get_pattern
 import Getprice
 import PredP
 import Terms
+import recom
 
 try:
     import apiai
@@ -61,23 +62,26 @@ def get_apiai(ai, message):
 
         if score>= 70:
             speech = "고객님의 투자 성향 점수는 "+str(score)+"점으로 공격투자형 입니다."
-            print(speech)
-            return speech
         elif score>=60:
             speech = "고객님의 투자 성향 점수는 "+str(score)+"점으로 적극투자형 입니다."
-            print(speech)
-            return speech
         elif score>=50:
             speech = "고객님의 투자 성향 점수는 "+str(score)+"점으로 위험중립형 입니다."
-            print(speech)
-            return speech
         elif score>= 40:
             speech = "고객님의 투자 성향 점수는 "+str(score)+"점으로 안정추구형 입니다."
-            print(speech)
-            return speech
         else:
             speech = "고객님의 투자 성향 점수는 "+str(score)+"점으로 안정형 입니다."
-            return speech
+        
+        dataSend = {
+                "message": {
+                    "text": speech
+                },
+                "keyboard": {
+                    "type" : "buttons",
+                    "buttons" : get_pattern.KeyBoard.survey
+                }
+        }
+        return dataSend
+        
     elif action == "RTP" :
         result = response_obj.get("result")
         parameters = result.get("parameters")
@@ -89,11 +93,17 @@ def get_apiai(ai, message):
             code = Getprice.get_stockcode(product)
             RTP = Getprice.get_realtime(code)
         speech = str(product)+"의 현재 가격은 "+str(RTP)+"원 입니다."
-
-        print("Response:")
-        print(speech)
-    
-        return speech
+        
+        dataSend = {
+                "message": {
+                    "text": speech
+                },
+                "keyboard": {
+                    "type" : "buttons",
+                    "buttons" : get_pattern.KeyBoard.rtp
+                }
+        }
+        return dataSend
     elif action == "futures":
         result = response_obj.get("result")
         parameters = result.get("parameters")
@@ -106,9 +116,18 @@ def get_apiai(ai, message):
             speech = str(product)+"의 다음 거래일 가격은 "+str(FP)+"원 입니다."
         else:
             speech = "해당 종목의 가격 예상 시스템은 추후에 구현됩니다."
-        print("Response:")
-        print(speech)
-        return speech
+        
+        dataSend = {
+                "message": {
+                    "text": speech
+                },
+                "keyboard": {
+                    "type" : "buttons",
+                    "buttons" : get_pattern.KeyBoard.fp
+                }
+        }
+        return dataSend
+        
     elif action == "terms":
         result = response_obj.get("result")
         parameters = result.get("parameters")
@@ -118,12 +137,55 @@ def get_apiai(ai, message):
         elif  parameters.get('terms')!="":
             terms = str(parameters.get("terms"))
             explain = Terms.get_explain(terms)
-
-       
         speech = str(terms)+"의 뜻은 다음과 같습니다. "+explain
-
-        print("Response:")
-        print(speech)
-        return speech
+        
+        dataSend = {
+            "message": {
+                "text": speech
+            },
+            "keyboard": {
+                "type" : "buttons",
+                "buttons" : get_pattern.KeyBoard.terms
+            }
+        }
+        return dataSend
+        
+    elif action == "recom":
+        result = response_obj.get("result")
+        parameters = result.get("parameters")
+        #"공격투자형","적극투자형","위험중립형","안정추구형","안정형"
+        if parameters.get("tendency") =="":
+            dataSend = {
+                "message": {
+                    "text": "고객님의 투자 성향을 선택해 주세요"
+                },
+                "keyboard": {
+                    "type" : "buttons",
+                    "buttons" : get_pattern.KeyBoard.tendency
+                }
+            }
+            return dataSend
+        elif parameters.get("tendency") !="":
+            if parameters.get("tendency") == "exhigh":
+                speech = recom.Recom(parameters.get("tendency"))    
+            elif parameters.get("tendency") =="high":
+                speech = recom.Recom(parameters.get("tendency"))    
+            elif parameters.get("tendency") =="normal":
+                speech = recom.Recom(parameters.get("tendency"))    
+            elif parameters.get("tendency") =="low":
+                speech = recom.Recom(parameters.get("tendency"))    
+            elif parameters.get("tendency") =="exlow":
+                speech = recom.Recom(parameters.get("tendency"))
+            
+            dataSend = {
+                "message": {
+                    "text": speech
+                },
+                "keyboard": {
+                    "type" : "buttons",
+                    "buttons" : get_pattern.KeyBoard.end
+                }
+            }
+            return dataSend
     answer = response_obj["result"]["fulfillment"]["speech"]
     return answer
