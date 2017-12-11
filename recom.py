@@ -8,7 +8,7 @@ def Recom(parameter):
     s = ""
     for i in range(5):
         tmp = port.iloc[i]
-        s += (tmp[0]+"  ")
+        s += (tmp[0]+"\n: ")
         st = np.array2string(tmp[1])
         s += (st+"\n")
     return s

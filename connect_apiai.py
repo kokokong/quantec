@@ -123,7 +123,7 @@ def get_apiai(ai, message):
                 },
                 "keyboard": {
                     "type" : "buttons",
-                    "buttons" : get_pattern.KeyBoard.fp
+                    "buttons" : get_pattern.KeyBoard.fp1
                 }
         }
         return dataSend
