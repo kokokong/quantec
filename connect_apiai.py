@@ -113,7 +113,7 @@ def get_apiai(ai, message):
             product = str(parameters.get("stocks"))
             FP = PredP.get_future(product)
         if FP != "":
-            speech = str(product)+"의 다음 거래일 가격은 "+str(FP)+"원 입니다."
+            speech = str(product)+"의 예상 가격은 "+str(FP)+"원 입니다."
         else:
             speech = "해당 종목의 가격 예상 시스템은 추후에 구현됩니다."
         
